@@ -37,6 +37,10 @@ const findUserByName = (name) => {
   return users.users_list.filter((user) => user.name === name);
 };
 
+const findUserByJob = (usersFiltered, job) => {
+  return usersFiltered.filter((usersFiltered) => usersFiltered.job === job);
+};
+
 //note, find only returns first instance, whereas filter returns all instances
 const findUserById = (id) => {
   return users.users_list.find((user) => user.id === id);
@@ -50,9 +54,13 @@ app.get("/", (req, res) => {
 
 app.get("/users", (req, res) => {
   const name = req.query.name;
+  const job = req.query.job;
   if (name) {
     //question: history/context behind "let" and when to use it vs const in javascript
     let result = findUserByName(name);
+    if(job){
+      result = findUserByJob(result, job);
+    }
     res.send(result);
   } else {
     res.send(users);
