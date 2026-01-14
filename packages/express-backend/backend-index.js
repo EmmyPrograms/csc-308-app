@@ -32,9 +32,14 @@ const users = {
     },
   ],
 };
-
+//note, example.["smth"] == example.smth
 const findUserByName = (name) => {
   return users.users_list.filter((user) => user.name === name);
+};
+
+//note, find only returns first instance, whereas filter returns all instances
+const findUserById = (id) => {
+  return users.users_list.find((user) => user.id === id);
 };
 
 app.use(express.json());
@@ -51,6 +56,16 @@ app.get("/users", (req, res) => {
     res.send(result);
   } else {
     res.send(users);
+  }
+});
+
+app.get("/users/:id", (req, res) => {
+  const id = req.params.id;
+  let result = findUserById(id);
+  if (result) {
+    res.send(result);
+  } else {
+    res.status(404).send("Error: Resource Not Found");
   }
 });
 
