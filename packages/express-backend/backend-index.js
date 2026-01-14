@@ -88,6 +88,17 @@ app.post("/users", (req, res) => {
   res.send();
 });
 
+app.delete("/users/:id", (req, res) => {
+  const id = req.params.id;
+  const userToDelete = findUserById(id);
+  if (userToDelete) {
+    users.users_list = users.users_list.filter((user) => user.id !== id);
+    res.send();
+  } else {
+    res.status(404).send("Error: Resource Not Found");
+  }
+});
+
 app.listen(port, () => {
   console.log(`Example app is running at http://localhost:${port}`);
 });
