@@ -56,7 +56,7 @@ app.get("/users", (req, res) => {
   const name = req.query.name;
   const job = req.query.job;
   if (name) {
-    //question: history/context behind "let" and when to use it vs const in javascript
+    
     let result = findUserByName(name);
     if(job){
       result = findUserByJob(result, job);
@@ -103,4 +103,4 @@ app.listen(port, () => {
   console.log(`Example app is running at http://localhost:${port}`);
 });
 
-//also question, how can I get npx nodemon to run on the root? Little different than npm
+
