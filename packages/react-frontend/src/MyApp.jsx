@@ -12,6 +12,9 @@ function MyApp() {
       return i !== index;
     });
     setCharacters(updated);
+    const promise = fetch(`http://localhost:8000/users/${characters[index].id}`,{
+      method: 'DELETE'
+    });
   }
 
   function fetchUsers(){

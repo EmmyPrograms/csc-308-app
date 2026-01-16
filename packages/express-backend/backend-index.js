@@ -101,7 +101,7 @@ app.delete("/users/:id", (req, res) => {
   const userToDelete = findUserById(id);
   if (userToDelete) {
     users.users_list = users.users_list.filter((user) => user.id !== id);
-    res.send();
+    res.status(204).send();
   } else {
     res.status(404).send("Error: Resource Not Found");
   }
