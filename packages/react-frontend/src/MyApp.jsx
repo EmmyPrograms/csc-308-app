@@ -4,9 +4,7 @@ import Form from "./Form";
 
 function MyApp() {
   const [characters, setCharacters] = useState([]);
-  function updateList(person) {
-    setCharacters([...characters, person]);
-  }
+  
   function removeOneCharacter(index) {
     const updated = characters.filter((characters, i) => {
       return i !== index;
@@ -30,6 +28,11 @@ function MyApp() {
     return (promise);
   }
 
+  function updateList(person){
+    postUser(person)
+      .then((res) => {if(res.status === 201) {setCharacters([...characters, person])}})
+      .catch((error) => console.error('Error posting user:', error));
+  }
 
   useEffect(() => {
     fetchUsers()
