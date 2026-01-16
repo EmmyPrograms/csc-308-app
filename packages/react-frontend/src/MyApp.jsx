@@ -4,6 +4,8 @@ import Form from "./Form";
 
 function MyApp() {
   const [characters, setCharacters] = useState([]);
+
+
   
   function removeOneCharacter(index) {
     const updated = characters.filter((characters, i) => {
@@ -18,6 +20,7 @@ function MyApp() {
   }
 
   function postUser(person){
+    
     const promise = fetch('http://localhost:8000/users',{
       method: 'POST',
       headers: {
@@ -30,7 +33,8 @@ function MyApp() {
 
   function updateList(person){
     postUser(person)
-      .then((res) => {if(res.status === 201) {setCharacters([...characters, person])}})
+      .then((res) => res.status === 201? res.json(): undefined)
+      .then((json) =>{if(json){setCharacters([...characters, json])}})
       .catch((error) => console.error('Error posting user:', error));
   }
 

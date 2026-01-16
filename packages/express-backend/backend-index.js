@@ -33,7 +33,12 @@ const users = {
     },
   ],
 };
-//note, example.["smth"] == example.smth
+
+
+const generateId = () =>{
+  return ((Math.floor(Math.random()*100))).toString();
+}
+
 const findUserByName = (name) => {
   return users.users_list.filter((user) => user.name === name);
 };
@@ -42,7 +47,7 @@ const findUserByJob = (usersFiltered, job) => {
   return usersFiltered.filter((usersFiltered) => usersFiltered.job === job);
 };
 
-//note, find only returns first instance, whereas filter returns all instances
+
 const findUserById = (id) => {
   return users.users_list.find((user) => user.id === id);
 };
@@ -86,8 +91,9 @@ const addUser = (user) => {
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
+  userToAdd.id = generateId();
   addUser(userToAdd);
-  res.status(201).send();
+  res.status(201).send(userToAdd);
 });
 
 app.delete("/users/:id", (req, res) => {
