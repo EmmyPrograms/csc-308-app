@@ -101,6 +101,7 @@ app.delete("/users/:id", (req, res) => {
   const userToDelete = findUserById(id);
   if (userToDelete) {
     users.users_list = users.users_list.filter((user) => user.id !== id);
+    //question, can I not send back the json of the deleted user when the promise ends?
     res.status(204).send();
   } else {
     res.status(404).send("Error: Resource Not Found");
