@@ -7,7 +7,7 @@ function MyApp() {
 
   function removeOneCharacter(index) {
     const promise = fetch(
-      `http://localhost:8000/users/${characters[index].id}`,
+      `http://localhost:8000/users/${characters[index]._id}`,
       {
         method: "DELETE",
       },

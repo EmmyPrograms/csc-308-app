@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npm -w packages/react-frontend run dev",
-    "back-end" : "npm -w packages/express-backend run dev"
+    "back-end": "npm -w packages/express-backend run dev"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,8 @@
   ],
   "devDependencies": {
     "nodemon": "^3.1.11"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3"
   }
 }

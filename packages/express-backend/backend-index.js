@@ -1,56 +1,20 @@
 import express from "express";
 import cors from "cors";
+import User from "./user-services.js";
+
+import connectDB from "./db.js";
+//import User from "./user.js";
 
 const app = express();
 const port = 8000;
 
-const users = {
-  users_list: [
-    {
-      id: "xyz789",
-      name: "Charlie",
-      job: "Janitor",
-    },
-    {
-      id: "abc123",
-      name: "Mac",
-      job: "Bouncer",
-    },
-    {
-      id: "ppp222",
-      name: "Mac",
-      job: "Professor",
-    },
-    {
-      id: "yat999",
-      name: "Dee",
-      job: "Aspring actress",
-    },
-    {
-      id: "zap555",
-      name: "Dennis",
-      job: "Bartender",
-    },
-  ],
+await connectDB().catch((error) => console.log(error));
+
+
+const generateId = () => {
+  return Math.floor(Math.random() * 100).toString();
 };
 
-
-const generateId = () =>{
-  return ((Math.floor(Math.random()*100))).toString();
-}
-
-const findUserByName = (name) => {
-  return users.users_list.filter((user) => user.name === name);
-};
-
-const findUserByJob = (usersFiltered, job) => {
-  return usersFiltered.filter((usersFiltered) => usersFiltered.job === job);
-};
-
-
-const findUserById = (id) => {
-  return users.users_list.find((user) => user.id === id);
-};
 
 app.use(cors());
 app.use(express.json());
@@ -60,56 +24,75 @@ app.get("/", (req, res) => {
 });
 
 app.get("/users", (req, res) => {
+  connectDB().catch((error) => console.log(error));
   const name = req.query.name;
   const job = req.query.job;
   if (name) {
-    
-    let result = findUserByName(name);
-    if(job){
-      result = findUserByJob(result, job);
+    User.getUsers(name)
+      .then((result) => {
+        if (result) {
+          res.send(result);
+        } else {
+          res.status(404).send("Error: Resource Not Found");
+        }
+      })
+      .catch((error) => console.log(error));
+    if (job) {
+      User.getUsers(result, job)
+        .then((result) => {
+          if (result) {
+            res.send(result);
+          } else {
+            res.status(404).send("Error: Resource Not Found");
+          }
+        })
+        .catch((error) => console.log(error));
     }
-    res.send(result);
   } else {
-    res.send(users);
+    User.getUsers().then((result) => {
+      if(result){
+      res.json( {users_list: result}).status(200);
+    }else{
+      res.status(404).send("Error: Resource Not Found");
+    }}).catch((error) => console.log(error));;
   }
 });
 
 app.get("/users/:id", (req, res) => {
+  connectDB().catch((error) => console.log(error));
   const id = req.params.id;
-  let result = findUserById(id);
-  if (result) {
-    res.send(result);
-  } else {
-    res.status(404).send("Error: Resource Not Found");
-  }
+  User.findUserById(id).then((result) => {
+      if(result){
+      res.send(result);
+    }else{
+      res.status(404).send("Error: Resource Not Found");
+    }}).catch((error) => console.log(error));
+ 
 });
 
-const addUser = (user) => {
-  users.users_list.push(user);
-  return user;
-};
 
 app.post("/users", (req, res) => {
+  connectDB().catch((error) => console.log(error));
   const userToAdd = req.body;
   userToAdd.id = generateId();
-  addUser(userToAdd);
-  res.status(201).send(userToAdd);
+  User.addUser(userToAdd).then((addedUser)=>{
+    res.status(201).send(addedUser);
+  }).catch((error) => console.log(error));
 });
+//idk how to do this yet :(
 
 app.delete("/users/:id", (req, res) => {
+  connectDB().catch((error) => console.log(error));
   const id = req.params.id;
-  const userToDelete = findUserById(id);
-  if (userToDelete) {
-    users.users_list = users.users_list.filter((user) => user.id !== id);
-    //question, can I not send back the json of the deleted user when the promise ends?
-    res.status(204).send();
-  } else {
-    res.status(404).send("Error: Resource Not Found");
-  }
+  User.deleteUserById(id).then((userToDelete) => {
+    if(userToDelete){
+      res.status(204).send();
+    }else{
+      res.status(404).send("Error: Resource Not Found");
+    }
+  }).catch((error) => console.log(error));
 });
 
 app.listen(port, () => {
   console.log(`Example app is running at http://localhost:${port}`);
 });
-
-
